@@ -1,12 +1,29 @@
+/*
+============================================
+; Title:  app.js
+; Author: Wendy Portillo
+; Date:   16 October 2019
+; Description: Server configurations file for
+; 			   an Express application.
+;===========================================
+*/
+
+// Required modules
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var apiCatalog = require('./routes/api-catalog'); 
+
 
 var indexRouter = require('./routes/index');
 
 var app = express();
+
+app.use('/api', apiCatalog);
+
 
 // Mongoose setup
 var mongoose = require('mongoose');
