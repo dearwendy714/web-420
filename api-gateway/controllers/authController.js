@@ -7,7 +7,11 @@
 ;              service calls and Mongo database.
 ;===========================================
 */
-
+// Require statements user_token
+var User = require('../ models/user');
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
+var config = require('../config');
 
 var User = require('../ models/user');
 // Register a new user on POST
