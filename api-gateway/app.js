@@ -15,7 +15,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var apiCatalog = require('./routes/api-catalog'); 
+var apiCatalog = require('./routes/api-catalog');
 
 
 var indexRouter = require('./routes/index');
@@ -30,9 +30,9 @@ var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 // Mongoose connection
 mongoose.connect('mongodb+srv://admin:admin@api-gateway-y6r4c.mongodb.net/test?retryWrites=true&w=majority', {
-promiseLibrary: require('bluebird')
-}).then ( () => console.log('connection successful'))
-.catch( (err) => console.error(err));
+    promiseLibrary: require('bluebird')
+  }).then(() => console.log('connection successful'))
+  .catch((err) => console.error(err));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,7 +40,9 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -48,12 +50,14 @@ app.use('/', indexRouter);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use(function (req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

@@ -1,5 +1,3 @@
-
-
 /*
 ============================================
 ; Title:  user.js
@@ -16,17 +14,19 @@ var mongoose = require('mongoose');
 
 // Create the user schema
 var userSchema = new mongoose.Schema({
- username: String,
- password: String,
- email: String
+    username: String,
+    password: String,
+    email: String
 });
 // Add new users 
-module.exports.add= (user, callback)=> {
+module.exports.add = (user, callback) => {
     user.save(callback);
 };
 // getById 
-module.exports.getById= (id, callback)=> {
-    var query = {_id:id};
+module.exports.getById = (id, callback) => {
+    var query = {
+        _id: id
+    };
     User.findById(query, callback);
 };
 
