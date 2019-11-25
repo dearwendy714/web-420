@@ -9,54 +9,70 @@
 */
 
 // Required modules
-
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var header = require('.././header.js');
+var indexRouter = require('./routes/index');
 var apiCatalog = require('./routes/api-catalog');
 
+mongoose.Promise = require('bluebird');
 
-var indexRouter = require('./routes/index');
-
+// Create new Express application
 var app = express();
 
-app.use('/api', apiCatalog);
+// Output the header to the console
+console.log(header.display('Wendy', 'Portillo', 'API Gateway Project') + '\n');
 
+// Database Connection String
+var mongoDB = "mongodb+srv://admin:admin@api-gateway-y6r4c.mongodb.net/test?retryWrites=true&w=majority";
 
-// Mongoose setup
-var mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
-// Mongoose connection
-mongoose.connect('mongodb+srv://admin:admin@api-gateway-y6r4c.mongodb.net/test?retryWrites=true&w=majority', {
+// Database connection
+mongoose.connect(mongoDB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
     promiseLibrary: require('bluebird')
-  }).then(() => console.log('connection successful'))
-  .catch((err) => console.error(err));
+  })
+  .then(() =>
+    console.log('Connection successful')
+  )
+  .catch((err) =>
+    console.error(err)
+  );
 
-// view engine setup
+// View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 
+// Register the API Catalog's routes
+app.use('/api', apiCatalog);
 
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
-  next(err);
+  next(createError(404));
 });
 
-// error handler
+// Error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
